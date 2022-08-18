@@ -1,36 +1,49 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View ,TextInput} from 'react-native';
+import { StyleSheet, Text, View ,ScrollView,TextInput,Image,FlatList} from 'react-native';
 import { Button } from 'react-native-web';
 
 
 export default function App() {
   const [lienTexteSaisie,SetLientexteSaisie] = useState("");
-  const [listeLiens,setlistelien]= useState([]);
+  const [listeLiens,setListeLien]= useState([]);
+  const _renderItem = ({ item }) => <Text>{item.title}</Text>
   function ajoutLienhandler(){
     //console.log(lienTexteSaisie);
-    setListeLiens ([...lienTexteSaisie]);
+    setListeLien ([...lienTexteSaisie ,lienTexteSaisie]);
   }
   function LienInputhandler(textSaisie){
     console.log(textSaisie);
-    SetLientexteSaisie(textSaisie);
+    SetLientexteSaisie(textSaisie,textSaisie);
   }
   return (
+    
     <View style={styles.container}>
+       <Image 
+          style={{ width: 100, height: 100, marginBottom: 15 }}
+          source={require('./assets/icon.png')}
+        />
       <View style= {styles.inputContainer}>  
        <TextInput placeholder='=nouveau ...'
        style={styles.inputLien} onChangeText=
-       {LienInputhandler}/>
+       {LienInputhandler} value={lienTexteSaisie}/>
      
       <Button title="Ajouter un lien" onPress= {ajoutLienhandler}/>
       
     </View>
-    <view>
+    <ScrollView>
       {listeLiens.map((lien) =><text key ={lien}>{lien}</text>)}
-    </view>
+    </ScrollView>
     <View style = { styles.liencontainer}>
     <Text>Liste des lien..</Text>
     </View>
+    
+    <View>
+       
+      </View>
+
     </View>
+    
+    
   );
 }
 
@@ -40,6 +53,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    height: 200,
+    borderColor:'red',
+    borderWidth:2,
   },
   inputLien: {
     borderColor: "grey",
@@ -52,9 +68,13 @@ const styles = StyleSheet.create({
     flex:1,
     flexDirection: "row",
     alignItems:'center',
+   
   },
   liencontainer:{
-    flex:3
+    //flex:3
+    height:80,
+    borderColor:'green',
+    borderWidth:2,
   }
 
 
