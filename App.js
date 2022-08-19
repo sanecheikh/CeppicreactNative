@@ -1,83 +1,91 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View ,ScrollView,TextInput,Image,FlatList} from 'react-native';
-import { Button } from 'react-native-web';
+import { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+} from "react-native";
 
+import LienItem from "./components/LienItem";
+import LienInput from "./components/LienInput";
 
 export default function App() {
-  const [lienTexteSaisie,SetLientexteSaisie] = useState("");
-  const [listeLiens,setListeLien]= useState([]);
-  const _renderItem = ({ item }) => <Text>{item.title}</Text>
-  function ajoutLienhandler(){
+  
+  const [listeLiens, setListeLien] = useState([]);
+
+  function ajoutLienHandler(lienTexteSaisie) {
     //console.log(lienTexteSaisie);
-    setListeLien ([...lienTexteSaisie ,lienTexteSaisie]);
+    setListeLien((currentListeLiens) => [
+      ...listeLiens,
+      { text: lienTexteSaisie, id: Math.random().toString() },
+    ]);
+   
   }
-  function LienInputhandler(textSaisie){
+  function supprimerLienHandler(id){
+    setListeLien((currentListeLiens) => {
+      return currentListeLiens.filtter((lien) => lien.id !==id);
+    })}
+  
+  function LienInputhandler(textSaisie) {
     console.log(textSaisie);
-    SetLientexteSaisie(textSaisie,textSaisie);
+    SetLientexteSaisie(textSaisie);
   }
   return (
-    
     <View style={styles.container}>
-       <Image 
-          style={{ width: 100, height: 100, marginBottom: 15 }}
-          source={require('./assets/icon.png')}
-        />
-      <View style= {styles.inputContainer}>  
-       <TextInput placeholder='=nouveau ...'
-       style={styles.inputLien} onChangeText=
-       {LienInputhandler} value={lienTexteSaisie}/>
-     
-      <Button title="Ajouter un lien" onPress= {ajoutLienhandler}/>
+      <Image
+        source={require("./assets/icon.png")}
+        style={{ width: 100, height: 100, marginBottom: 20}}
       
-    </View>
-    <ScrollView>
-      {listeLiens.map((lien) =><text key ={lien}>{lien}</text>)}
-    </ScrollView>
-    <View style = { styles.liencontainer}>
-    <Text>Liste des lien..</Text>
-    </View>
-    
-    <View>
-       
+      />
+     {/*  <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="=nouveau ..."
+          style={styles.inputLien}
+          onChangeText={LienInputhandler}
+          value={lienTexteSaisie}
+        />
+
+        <Button title="Ajouter un lien" onPress={ajoutLienhandler} />
+      </View>*/}
+      <View> 
+        {/* {listeLiens.map((lien) =><text key ={lien}>{lien}</text>)} */}
       </View>
 
-    </View>
-    
-    
-  );
-}
+      <LienInput  ajoutLien={ajoutLienHandler} />
+      <View style={styles.lienContainer}>
+        <Text>Liste des lien..</Text>
 
+        <FlatList
+          data={listeLiens}
+          KeyExtractor={(item, index) => {
+            return (item.id);
+          }}
+          renderItem={(itemData) => {
+            return (<LienItem text={itemData.item.text}  id={itemData.item.id}
+              onSupprimerItem={supprimerLienHandler}/>);
+          }}
+        />
+      </View>
+    </View>
+  );
+        
+        }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
     height: 200,
-    borderColor:'red',
-    borderWidth:2,
+    borderColor: "red",
+    borderWidth: 2,
   },
-  inputLien: {
-    borderColor: "grey",
-    borderWidth:1,
-    padding:8,
-    width:"70%"
 
-  },
-  inputContainer:{
-    flex:1,
-    flexDirection: "row",
-    alignItems:'center',
-   
-  },
-  liencontainer:{
+  lienContainer: {
     //flex:3
-    height:80,
-    borderColor:'green',
-    borderWidth:2,
-  }
-
-
- 
-
+    height: 80,
+    borderColor: "green",
+    borderWidth: 2,
+  },
 });
